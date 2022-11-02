@@ -26,7 +26,6 @@ function printResult(error, result) {
 function signDocument(error,result){
     var signature = VistaJSLibrary.buildEncryptedSigString(configuration.sig);
     VistaJS.callRpc(logger, configuration, 'TIU SIGN RECORD', result,signature, printJsonResult);
-    console.log(signature)
 }
 function printJsonResult(error, result) {
     console.log(clc.red(inspect(error)));
