@@ -1,0 +1,22 @@
+{
+  "name": "vista-notes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^3.2.4",
+    "bunyan": "^1.8.15",
+    "cli-color": "^2.0.3",
+    "moment": "^2.29.4",
+    "node-cache": "^5.1.2",
+    "underscore": "^1.13.6",
+    "underscore.string": "^3.3.6",
+    "util": "^0.12.5"
+  }
+}
