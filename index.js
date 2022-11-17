@@ -43,7 +43,7 @@ function printJsonResult(error, result) {
    And you will need to to set context to the CPRS context. 
 */
 console.log('Executing RPC...')
-//VistaJS.callRpc(logger, configuration, 'SDES GET USER PROFILE BY DUZ', [VistaJS.RpcParameter.literal('1')],printJsonResult);
+VistaJS.callRpc(logger, configuration, 'SDES GET USER PROFILE BY DUZ', [VistaJS.RpcParameter.literal('1')],printJsonResult);
 
 /** Note Creation **
    There are two different types of notes.  A note that has an encounter (a little more complicated) and a note
@@ -67,6 +67,7 @@ console.log('Executing RPC...')
         Example Pulled from CPRS SHOWRPCS:
 
         TIU CREATE RECORD 
+        https://vivian.worldvista.org/vivian-data/8994/8994-97.html
                   
             Params ------------------------------------------------------------------
             literal	418
@@ -92,7 +93,7 @@ console.log('Executing RPC...')
              //'(1301)': 'N',
 */
 
-console.log("Creating a historical note.....")
+console.log("Creating a note.....")
  
 
 var note = [
@@ -104,19 +105,19 @@ var note = [
          {
             '(1701)': '',
              '(1205)': '64', //Location IEN
-             '"TEXT",1,0': 'This is an Example of Writing a note.',
+             '"TEXT",1,0': 'This is an Example of Writing a note To Patient 6.',
              '"TEXT",2,0': 'The data is all Manually entered to simplify the Example.',
              '"TEXT",3,0': 'vista-api would use the same input just uing VistAJS to make thismore portable.',
              '"TEXT",4,0': 'Open Six,Patient to see the note.',
              '"TEXT",4,0': 'I immediatly sign the note in this example.',
          },
-         '64;3221101.123327;E',  //Vist information location;date;type
+         '64;3221101.123327;E',  //Vist information location;FM date;type
          '1'
         ]
     /*
         Context below is the security context or VistA MEnu option that the RPC is in.
     */
-     configuration.context='OR CPRS GUI CHART'
-     VistaJS.callRpc(logger, configuration, 'TIU CREATE RECORD', note, signDocument);
+    // configuration.context='OR CPRS GUI CHART'
+    // VistaJS.callRpc(logger, configuration, 'TIU CREATE RECORD', note, signDocument);
 
     
