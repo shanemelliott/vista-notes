@@ -1,0 +1,140 @@
+* {
+  box-sizing:border-box;
+}
+
+
+.panel-primary .panel-heading{
+background-color:#112e51
+}
+.bg-primary {
+    background-color:#112e51
+}
+
+.btn-primary
+{
+    background-color:#112e51
+}
+.ow {
+    overflow-wrap: normal;
+    hyphens: auto;
+  }
+#dataTable {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    border-radius: 3px;
+    border-radius: 3px;
+}
+input:invalid { border: 2px dashed red;}
+input:valid { border: 2px solid black;}
+#dataTable tr td, #hoursTable  th {
+ 
+    border: 1px solid #ddd;
+    padding: 8px;
+    white-space:nowrap;
+   
+}
+#dataTable  td:last-child {
+    width: 100%;
+    white-space:nowrap;
+}
+#dataTable tr:nth-child(even){background-color: #f2f2f2;}
+
+#dataTable tr:hover {background-color: #ddd;}
+
+#dataTable th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left:10px;
+    text-align: left;
+    background-color: #112e51;
+    color: white;
+}
+   #dataTable {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    border-radius: 3px;
+    border-radius: 3px;
+}
+
+#dataTable tr td, #hoursTable  th {
+ 
+    border: 1px solid #ddd;
+    padding: 8px;
+    white-space:nowrap;
+   
+}
+#dataTable  td:last-child {
+    width: 100%;
+    white-space:nowrap;
+}
+#dataTable tr:nth-child(even){background-color: #f2f2f2;}
+
+#dataTable tr:hover {background-color: #ddd;}
+
+
+#responseTable {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    border-radius: 3px;
+    border-radius: 3px;
+}
+
+#responseTable tr td, #hoursTable  th {
+ 
+    border: 1px solid #ddd;
+    padding: 8px;
+    white-space:nowrap;
+   
+}
+#responseTable  td:last-child {
+    width: 100%;
+    white-space:nowrap;
+}
+#responseTable tr:nth-child(even){background-color: #f2f2f2;}
+
+#responseTable tr:hover {background-color: #ddd;}
+
+#responseTable th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left:10px;
+    text-align: left;
+    background-color: #337ab7;
+    color: white;
+}
+   #dataTable {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    border-radius: 3px;
+    border-radius: 3px;
+}
+
+#responseTable tr td, #hoursTable  th {
+ 
+    border: 1px solid #ddd;
+    padding: 8px;
+    white-space:nowrap;
+   
+}
+#responseTable  td:last-child {
+    width: 100%;
+    white-space:nowrap;
+}
+#responseTable tr:nth-child(even){background-color: #f2f2f2;}
+
+#responseTable tr:hover {background-color: #ddd;}
+
+#responseTable th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left:10px;
+    text-align: left;
+    background-color: #337ab7;
+    color: white;
+   
+
+}

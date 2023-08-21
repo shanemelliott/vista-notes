@@ -13,8 +13,10 @@
     "async": "^3.2.4",
     "bunyan": "^1.8.15",
     "cli-color": "^2.0.3",
+    "express": "^4.18.2",
     "moment": "^2.29.4",
     "node-cache": "^5.1.2",
+    "path": "^0.12.7",
     "underscore": "^1.13.6",
     "underscore.string": "^3.3.6",
     "util": "^0.12.5"
