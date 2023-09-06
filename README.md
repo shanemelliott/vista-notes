@@ -6,6 +6,8 @@ Basic Example of writing notes to VistA.  In the index.js file I have included a
 
 This was written against station 500 (dev) in OCTO. 
 
+
 There is now a basic user interface to demonstrate using RPCs to write notes. 
 
 you can access at: http://localhost:4567 after launcing the node app. 
+
