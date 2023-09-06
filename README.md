@@ -6,4 +6,8 @@ Basic Example of writing notes to VistA.  In the index.js file I have included a
 
 This was written against station 500 (dev) in OCTO. 
 
-There is another branch with a very simple web interface (Add-web-interface).  I did the RPC calls on the node side to make the implementation simpler and put auth / signature code in a config file, but you could do it all in the client. 
+
+There is now a basic user interface to demonstrate using RPCs to write notes. 
+
+you can access at: http://localhost:4567 after launcing the node app. 
+
