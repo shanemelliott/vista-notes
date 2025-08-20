@@ -195,34 +195,212 @@ app.get('/patients', (request, response) => {
         })
         response.send(list)
     });
-    app.post('/note', (request, response) => {
+})
 
-   
-        var data=request.body
-        var text={
-            '(1701)': '',
-            '(1205)': '64', //Location IEN 
+app.post('/note', (request, response) => {
+    var data=request.body
+    
+    // Require clinic IEN - error if not provided
+    if (!data.clinicIen) {
+        return response.status(400).json({ error: 'Clinic IEN is required. Please select an appointment first.' });
+    }
+    
+    // Require DUZ - error if not provided in config
+    if (!configuration.duz) {
+        return response.status(500).json({ error: 'DUZ is required in configuration.' });
+    }
+    
+    // Convert ISO datetime to FileMan datetime format
+    function convertToFileManDateTime(isoDateTime) {
+        if (!isoDateTime) return '';
+        
+        try {
+            // Parse without timezone conversion to preserve literal date/time values
+            var date = moment.parseZone(isoDateTime);
+            if (!date.isValid()) return '';
+            
+            console.log('Input ISO datetime:', isoDateTime);
+            console.log('Parsed date (no timezone conversion):', date.format());
+            
+            // FileMan date format: YYYMMDD.HHMM (no seconds)
+            // Where YYY is years since 1700
+            var year = date.year();
+            var filemanYear = year - 1700;
+            var month = date.format('MM');
+            var day = date.format('DD');
+            var hour = date.format('HH');
+            var minute = date.format('mm');
+            
+            console.log('Year:', year, 'FileMan Year:', filemanYear);
+            console.log('Month:', month, 'Day:', day, 'Hour:', hour, 'Minute:', minute);
+            
+            var result = filemanYear + month + day + '.' + hour + minute;
+            console.log('FileMan result:', result);
+            
+            return result;
+        } catch (err) {
+            console.error('Error converting datetime to FileMan format:', err);
+            return '';
+        }
+    }
+    
+    var clinicIen = data.clinicIen;
+    var fmDateTime = convertToFileManDateTime(data.dateTime);
+    var text={
+        '(1701)': '',
+        '(1205)': clinicIen, //Location IEN from appointment
+        }
+    
+    data.body.forEach(function(e,i){
+        var line=i+1
+        text['"TEXT",'+line+',0']=e
+      })
+
+    var note = [
+        data.dfn,// DFN
+        data.noteTitle, // Note Title IEN
+        '', 
+        clinicIen, //Location IEN from appointment
+        '',
+        text,
+        clinicIen + ';' + fmDateTime + ';A',  //Visit information location;FM appointment date/time;type
+        configuration.duz // DUZ from config (required)
+       ]
+       console.log('FileMan DateTime:', fmDateTime);
+       console.log(note)
+       VistaJS.callRpc(logger, configuration, 'TIU CREATE RECORD', note,printResult);
+       //VistaJS.callRpc(logger, configuration, 'TIU CREATE RECORD', note, signDocument);
+       response.sendStatus(200)
+})
+
+app.get('/appointments', (request, response) => {
+    // Set the appropriate context for scheduling appointments
+    configuration.context = 'SDECRPC';
+    
+    // Get clinic IEN from config
+    var clinicIen = configuration.clinicIen;
+    
+    // Auto-generate today's date range
+    var today = moment();
+    var startDate = today.format('YYYY-MM-DDTHH:mm:ss-04:00').replace('T' + today.format('HH:mm:ss'), 'T00:00:00');
+    var endDate = today.format('YYYY-MM-DDTHH:mm:ss-04:00').replace('T' + today.format('HH:mm:ss'), 'T23:59:59');
+    
+    // Call the RPC with clinic IEN and date parameters (dates in ISO format, not FileMan)
+    var rpcParams = [clinicIen, startDate, endDate];
+    
+    VistaJS.callRpc(logger, configuration, 'SDES GET APPTS BY CLIN IEN 3', rpcParams, function(error, data) {
+        if (error) {
+            console.error('Error calling SDES GET APPTS BY CLIN IEN 3:', error);
+            response.status(500).json({ error: 'Failed to retrieve appointments', details: error });
+            return;
+        }
+        
+        // Clean control characters that might cause JSON parsing issues
+        if (data && typeof data === 'string') {
+            // Remove all control characters
+            data = data.replace(/[\x00-\x1f\x7f-\x9f]/g, '');
+            // Fix any resulting malformed JSON from the cleaning
+            data = data.replace(/"([^"]+)":"(\s*)",/g, '"$1":"",');
+            data = data.replace(/"([^"]+)":"(\s*)"/g, '"$1":""');
+        }
+        
+        try {
+            // Parse the JSON response
+            var jsonData = JSON.parse(data);
+            var fhirEntries = [];
+            
+            // Extract appointments from the JSON structure, excluding cancelled ones
+            if (jsonData.Appointment && Array.isArray(jsonData.Appointment)) {
+                jsonData.Appointment.forEach(function(appt, index) {
+                    // Skip empty entries and cancelled appointments
+                    if (appt && typeof appt === 'object' && 
+                        (!appt.AppointmentCancelled || appt.AppointmentCancelled === '')) {
+                        
+                        // Convert VistA appointment to FHIR R4 Appointment resource
+                        var fhirAppointment = {
+                            resourceType: "Appointment",
+                            id: "vista-appt-" + (appt.AppointmentIEN || index),
+                            status: appt.CurrentStatus ? 
+                                (appt.CurrentStatus.toLowerCase().includes('scheduled') ? "booked" : "pending") : "booked",
+                            serviceCategory: [{
+                                coding: [{
+                                    system: "http://terminology.hl7.org/CodeSystem/service-category",
+                                    code: "17",
+                                    display: "General Practice"
+                                }]
+                            }],
+                            serviceType: [{
+                                coding: [{
+                                    system: "http://terminology.hl7.org/CodeSystem/service-type",
+                                    code: "124",
+                                    display: "General Practice"
+                                }]
+                            }],
+                            appointmentType: {
+                                coding: [{
+                                    system: "http://terminology.hl7.org/CodeSystem/v2-0276",
+                                    code: "ROUTINE",
+                                    display: "Routine appointment"
+                                }]
+                            },
+                            start: appt.AppointmentDateTime || "",
+                            end: appt.AppointmentDateTime || "", // VistA doesn't provide end time, using start
+                            participant: [
+                                {
+                                    actor: {
+                                        reference: "Patient/" + (appt.Patient ? appt.Patient.DFN : "unknown"),
+                                        display: appt.Patient ? appt.Patient.Name : "Unknown Patient"
+                                    },
+                                    status: "accepted"
+                                },
+                                {
+                                    actor: {
+                                        reference: "Location/" + (appt.Clinic ? appt.Clinic.ClinicIEN : clinicIen),
+                                        display: appt.Clinic ? appt.Clinic.Name : "Clinic " + clinicIen
+                                    },
+                                    status: "accepted"
+                                }
+                            ],
+                            meta: {
+                                source: "VistA",
+                                lastUpdated: new Date().toISOString(),
+                                profile: ["http://hl7.org/fhir/StructureDefinition/Appointment"]
+                            }
+                        };
+                        
+                        fhirEntries.push({
+                            fullUrl: "Appointment/vista-appt-" + (appt.AppointmentIEN || index),
+                            resource: fhirAppointment
+                        });
+                    }
+                });
             }
-        data.body.forEach(function(e,i){
-            var line=i+1
-            text['"TEXT",'+line+',0']=e
-          })
-
-        var note = [
-            data.dfn,// DFN
-            data.noteTitle, // Note Title IEN
-            '', 
-            '64', //Location IEN
-            '',
-            text,
-            '64;3221101.123327;E',  //Vist information location;FM date;type
-            '1'
-           ]
-   
-           VistaJS.callRpc(logger, configuration, 'TIU CREATE RECORD', note, signDocument);
-           response.sendStatus(200)
-    })
-
+            
+            // Create FHIR R4 Bundle response
+            var fhirBundle = {
+                resourceType: "Bundle",
+                id: "vista-appointments-" + today.format('YYYY-MM-DD'),
+                type: "searchset",
+                timestamp: new Date().toISOString(),
+                total: fhirEntries.length,
+                link: [{
+                    relation: "self",
+                    url: request.protocol + '://' + request.get('host') + request.originalUrl
+                }],
+                entry: fhirEntries,
+                meta: {
+                    source: "VistA",
+                    lastUpdated: new Date().toISOString()
+                }
+            };
+            
+            response.json(fhirBundle);
+            
+        } catch (parseError) {
+            console.error('Error parsing appointment JSON data:', parseError);
+            response.status(500).json({ error: 'Failed to parse appointment data', details: parseError.message });
+        }
+    });
 })
 
     

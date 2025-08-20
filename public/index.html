@@ -22,14 +22,27 @@
            <i class="fa fa-fw fa-external-link"></i>
        </h1>
        
-        
-        
+        <!-- Appointments Section -->
+        <div class="panel panel-info mb-4">
+          <div class="panel-heading bg-info text-white p-2">
+            <h4>Today's Appointments</h4>
+          </div>
+          <div class="panel-body p-3">
+            <div id="appointmentsContainer">
+              <div class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading appointments...</span>
+                </div>
+                <p class="mt-2">Loading appointments...</p>
+              </div>
+            </div>
+          </div>
+        </div>
         
         <div class="panel panel-primary">
           <div id="user" class="panel-heading"></div>
           <div class="panel-body">
             <!--input type="text" class="form-control" id="msgTxt" placeholder="Input... for testing things.."/><br/-->
-            <select id="patientId" class="form-control" ></select><br/>
             <select id="noteTitleId" class="form-control"></select><br/>
 
             <div class="form-group mb-2">
