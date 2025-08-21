@@ -2,39 +2,39 @@
 
 A comprehensive web-based application for creating clinical notes in VistA through an appointment-driven workflow. This application integrates VistA RPC calls, FHIR R4 compliance, speech-to-text dictation, and AI-powered note enhancement to streamline clinical documentation.
 
-## 🚀 Features
+## Features
 
-### 📅 **Appointment Integration**
+### **Appointment Integration**
 - Automatically loads today's appointments from VistA using `SDES GET APPTS BY CLIN IEN 3` RPC
 - FHIR R4 compliant appointment data format
 - Click-to-select appointment workflow for note creation
 - Dynamic clinic IEN and FileMan datetime integration
 
-### 📝 **Note Creation**
+### **Note Creation**
 - Direct integration with VistA TIU system using `TIU CREATE RECORD` RPC
 - Appointment-driven note writing (no manual patient selection required)
 - Multiple note title options (Attending Note, Primary Care Visit, etc.)
 - Automatic visit information and encounter linking
 
-### 🎤 **Speech-to-Text Dictation**
+### **Speech-to-Text Dictation**
 - Browser-based speech recognition (Chrome, Edge, Safari)
 - Continuous dictation with real-time transcription
 - One-click start/stop microphone control
 - Seamless integration with note editor
 
-### 🤖 **AI-Powered Note Enhancement**
+### **AI-Powered Note Enhancement**
 - Azure OpenAI integration for note summarization and enhancement
 - Configurable AI prompts for SOAP note formatting
 - One-click note improvement and clinical language enhancement
 - Maintains all original clinical details while improving structure
 
-### 🏥 **VistA Integration**
+### **VistA Integration**
 - Secure RPC connections to VistA systems
 - Proper context switching for different VistA modules
 - FileMan datetime conversion for appointment data
 - Comprehensive error handling and validation
 
-## 🛠️ Installation & Setup
+## Installation & Setup
 
 ### Prerequisites
 - Node.js (v14 or higher)
@@ -80,7 +80,7 @@ node index.js
 
 Access the application at: `http://localhost:4567`
 
-## 📋 Usage Workflow
+## Usage Workflow
 
 ### 1. **View Today's Appointments**
 - Application automatically loads appointments for the configured clinic
@@ -102,7 +102,7 @@ Access the application at: `http://localhost:4567`
 - Automatic visit creation with proper FileMan datetime
 - Note linked to appointment encounter and clinic location
 
-## 🔧 Technical Architecture
+## Technical Architecture
 
 ### Backend (Node.js/Express)
 - **VistA RPC Integration**: Direct communication with VistA using VistaJS library
@@ -122,7 +122,7 @@ Access the application at: `http://localhost:4567`
 - `POST /ai-enhance` - AI-powered note enhancement
 - `GET /noteTitles` - Available note types
 
-## 🏥 VistA Integration Details
+## VistA Integration Details
 
 ### Required RPC Contexts
 - `SDECRPC` - For appointment retrieval
@@ -138,7 +138,7 @@ Access the application at: `http://localhost:4567`
 2. **Note Creation**: Client → FileMan datetime conversion → VistA TIU
 3. **AI Enhancement**: Note content → Azure OpenAI → Enhanced content
 
-## 🔐 Security & Configuration
+## Security & Configuration
 
 ### VistA Security
 - Secure RPC connections with access/verify codes
@@ -150,14 +150,14 @@ Access the application at: `http://localhost:4567`
 - No hardcoded credentials or endpoints
 - Environment-specific configuration support
 
-## 🚨 Error Handling
+## Error Handling
 
 - **Appointment Loading**: Graceful fallback for RPC failures
 - **Note Creation**: Validation for required fields and VistA connectivity
 - **AI Integration**: Fallback for missing API keys or service issues
 - **Speech Recognition**: Browser compatibility detection
 
-## 📱 Browser Compatibility
+## Browser Compatibility
 
 ### Full Support
 - **Chrome/Chromium**: All features including speech recognition
@@ -168,7 +168,7 @@ Access the application at: `http://localhost:4567`
 - **Firefox**: Basic functionality (no speech recognition)
 - **Mobile Browsers**: Touch-optimized interface
 
-## 🔮 Future Enhancements
+## Future Enhancements
 
 - **Multiple Clinic Support**: Multi-clinic appointment viewing
 - **Note Templates**: Predefined note structures
@@ -176,11 +176,11 @@ Access the application at: `http://localhost:4567`
 - **Audit Logging**: Comprehensive user activity tracking
 - **Mobile App**: Native iOS/Android applications
 
-## 📄 License
+## License
 
 This project is developed for VistA integration and clinical workflow improvement. Please ensure compliance with your organization's policies regarding VistA system access and clinical data handling.
 
-## 🤝 Contributing
+## Contributing
 
 For issues, feature requests, or contributions, please contact the development team or submit issues through the appropriate channels.
 
