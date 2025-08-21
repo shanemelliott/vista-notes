@@ -2,7 +2,7 @@
 
 A comprehensive web-based application for creating clinical notes in VistA through an appointment-driven workflow. This application integrates VistA RPC calls, FHIR R4 compliance, speech-to-text dictation, and AI-powered note enhancement to streamline clinical documentation.
 
-## Features
+## 🚀 Features
 
 ### **Appointment Integration**
 - Automatically loads today's appointments from VistA using `SDES GET APPTS BY CLIN IEN 3` RPC
@@ -187,3 +187,8 @@ For issues, feature requests, or contributions, please contact the development t
 ---
 
 **Note**: This application requires proper VistA system access and should only be used by authorized clinical personnel with appropriate system permissions. 
+=======
+
+There is now a basic user interface to demonstrate using RPCs to write notes. 
+
+you can access at: http://localhost:4567 after launcing the node app. 
