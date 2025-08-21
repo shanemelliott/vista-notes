@@ -47,10 +47,17 @@
 
             <div class="form-group mb-2">
               <label for="exampleFormControlTextarea1">Note Editor</label>
+              <div class="d-flex mb-2">
+                <button class="btn btn-outline-danger" id="microphoneBtn" title="Start/Stop Dictation">
+                  <span id="micIcon">🎤</span> <span id="micText">Start Dictation</span>
+                </button>
+                <div id="speechStatus" class="ms-2 align-self-center text-muted"></div>
+              </div>
               <textarea class="form-control" id="noteBody" rows="10"></textarea>
             </div>
               <button class="btn btn-primary" id="saveNote">Save</button>
               <button class="btn btn-primary" id="resetAll">Reset</button>
+              <button class="btn btn-success" id="aiEnhanceBtn">Summarize Note</button>
           
             <div class="panel-body" id="getResult2"></div>
           </div>

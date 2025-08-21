@@ -14,6 +14,7 @@ var VistaJS = require('./VistaJS');
 const configuration = require('./config');
 var VistaJSLibrary = require('./VistaJSLibrary');
 const bodyParser = require('body-parser');
+const { openaiClient, initializeClient } = require('./openaiClient');
 
 var app = express();
 app.use(express.static(path.join(__dirname, 'public')));
@@ -393,7 +394,7 @@ app.get('/appointments', (request, response) => {
                     lastUpdated: new Date().toISOString()
                 }
             };
-            
+            //console.log(fhirBundle)
             response.json(fhirBundle);
             
         } catch (parseError) {
@@ -402,6 +403,50 @@ app.get('/appointments', (request, response) => {
         }
     });
 })
+
+app.post('/ai-enhance', async (request, response) => {
+    try {
+        const { noteContent } = request.body;
+        
+        if (!noteContent || noteContent.trim() === '') {
+            return response.status(400).json({ error: 'Note content is required' });
+        }
+        
+        if (!configuration.aiPrompt) {
+            return response.status(400).json({ error: 'AI prompt is not configured' });
+        }
+        
+        if (!configuration.AZURE_OPENAI_API_KEY) {
+            return response.status(500).json({ error: 'Azure OpenAI API key is not configured' });
+        }
+        
+        // Initialize OpenAI client (using gpt-4o model, adjust as needed)
+        const client = initializeClient('gpt-4o');
+        
+        // Combine the configured prompt with the note content
+        const fullPrompt = configuration.aiPrompt + '\n\nNote Content:\n' + noteContent;
+        
+        console.log('Sending to AI:', { prompt: configuration.aiPrompt, noteLength: noteContent.length });
+        
+        // Call OpenAI
+        const aiResponse = await openaiClient(client, fullPrompt);
+        
+        console.log('AI response received:', aiResponse.substring(0, 100) + '...');
+        
+        response.json({
+            originalContent: noteContent,
+            enhancedContent: aiResponse,
+            prompt: configuration.aiPrompt
+        });
+        
+    } catch (error) {
+        console.error('AI enhancement error:', error);
+        response.status(500).json({ 
+            error: 'Failed to enhance note with AI', 
+            details: error.message 
+        });
+    }
+});
 
     
     var port = process.env.PORT || 4567;
